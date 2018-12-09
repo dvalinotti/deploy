@@ -9,14 +9,14 @@ require_once('functions.inc');
 
 function doBundle($source, $version)
 {
-    $result = false;
-    foreach (ip as $target => $ip) {
-	if (endsWith($target, $source)) {
-	    echo "BUNDLING:" .  $target . "\n";
-            $b = bundle($source, str_replace('-' . $source , '' , $target), $version);
-            $fn = $version . 'tar.gz';
+    $result = '';
 
-	    echo $b . "\n";
+    foreach (ip as $target => $ip) {
+        if (endsWith($target, $source)) {
+            echo "BUNDLING:" .  $target . "\n";
+            $b = bundle($source, str_replace('-' . $source, '', $target), $version);
+            $fn = $version . 'tar.gz';
+            $result .= $b;
             //if (strpos($b, 'rm -rf ' . $fn) !== false) {
             //    echo 'Bundle on' . $target . '@' . $source . ': SUCCESS' ;
             //   $result = true;
@@ -53,7 +53,7 @@ function requestProcessor($request)
         case "bundle":
             return doBundle($request['source'], $request['version']);
         case "push":
-            return doPush($request['source'], $request['destination'], $request['version']);
+            return doPush($request['source'], $request['version'], $request['destination']);
         case "rollback":
             return doRollback($request['source'], $request['destination'], $request['version']);
     }
