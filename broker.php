@@ -25,16 +25,16 @@ function doBundle($source, $version)
 
 function doPush($destination, $version)
 {
-    //foreach (ip as $target => $ip) {
-      //  if (endsWith($target, $destination)) {
-        //    $target = strtok($target, '-');
-        //    echo "Pushing ver" . $version . " to " . $target . '-' . $destination . "...\n";
-        //    $b = push($target, $destination, $version);
-        //    $fn = $version . 'tar.gz';
+    foreach (ip as $target => $ip) {
+        if (endsWith($target, $destination)) {
+            $target = strtok($target, '-');
+            echo "Pushing ver" . $version . " to " . $target . '-' . $destination . "...\n";
+            $b = push($target, $destination, $version);
+            $fn = $version . 'tar.gz';
 
-        //    echo $b . "\n";
-       // }
-	// }
+            echo $b . "\n";
+        }
+    }
     $b = push('frontend', 'qa', '1.0');
     return "Complete";
 }
