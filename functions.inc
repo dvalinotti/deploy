@@ -82,8 +82,8 @@ function push($host, $layer, $version)
     }
 
     $scp = new NET_SCP($ssh);
-    if (!$scp->put('/bundles/' . $bundle,
-                   '/bundles/' . $host . '/' . $bundle,
+    if (!$scp->put('/home/ubuntu/bundles/' . $bundle,
+                   '/home/ubuntu/deploy/bundles/' . $host . '/' . $bundle,
                    NET_SCP_LOCAL_FILE))
     {
         throw new Exception("Failed to send file");
