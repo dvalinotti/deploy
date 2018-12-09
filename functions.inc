@@ -91,9 +91,9 @@ function push($host, $layer, $version)
         exit('Login Failed');
     }
     $scp = new Net_SCP($sftp);
-    if (!$scp->put('/bundles/' . $bundle,
-                   '/deploy/bundles/' . $host . '/' . $bundle,
-                   NET_SFTP_LOCAL_FILE))
+    if (!$scp->put('bundles/' . $bundle,
+                   'deploy/bundles/' . $host . '/' . $bundle,
+                   NET_SCP_LOCAL_FILE))
     {
         throw new Exception("Failed to send file");
     }
