@@ -83,7 +83,7 @@ function push($host, $layer, $version) {
     echo $ssh->read($read);
     $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
     echo $ssh->read($read);    
-    $ssh-> write('tar -C /' . $host . ' -xzvf ' . $bundle . "\n");
+    $ssh-> write('tar -C /git/' . $host . ' -xzvf ' . $bundle . "\n");
     echo $ssh->read($read);
     unset($ssh);
     return "Success";
