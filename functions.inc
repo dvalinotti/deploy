@@ -3,6 +3,7 @@
 include('Net/SSH2.php');
 include('Crypt/RSA.php');
 include('Net/SCP.php');
+include('Net/SFTP.php');
 require_once('rabbitMQLib.inc');
 
 const ip = [
@@ -80,8 +81,15 @@ function push($host, $layer, $version)
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-
-    $scp = new NET_SCP($ssh);
+    
+    $sftp = new SFTP(ip[$key_file]);
+    $key = new Crypt_RSA();
+    $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
+    echo 'attempting connection';
+    if (!$sftp->login('ubuntu', $key)) {
+        exit('Login Failed');
+    }
+    $scp = new NET_SCP($sftp);
     if (!$scp->put('/home/ubuntu/bundles/' . $bundle,
                    '/home/ubuntu/deploy/bundles/' . $host . '/' . $bundle,
                    NET_SCP_LOCAL_FILE))
