@@ -118,8 +118,8 @@ function push($host, $layer, $version)
 
 function rollback($layer, $host) 
 {
-    $bundle = $host . '_old.tar.gz';
-    $key_file = $host . '-' . $layer;
+    $bundle = $layer . '_old.tar.gz';
+    $key_file = $layer . '-' . $host;
     $read = 'ubuntu@ip-' . str_replace('.', '-', ip[$key_file]) . ':~$';
     
     //Initialize SSH connection to target@layer
@@ -133,7 +133,7 @@ function rollback($layer, $host)
 
     $ssh->setTimeout(6);
     echo $ssh->read($read);
-    $ssh-> write('tar -C git/' . $host . ' -xzvf ' . $bundle . "\n");
+    $ssh-> write('tar -C git/' . $layer . ' -xzvf ' . $bundle . "\n");
     echo $ssh->read($read);
 
     unset($ssh);

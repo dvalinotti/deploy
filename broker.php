@@ -36,7 +36,7 @@ function doPush($destination, $version)
     return "PUSH COMPLETE";
 }
 
-function doRollback($source, $destination, $version)
+function doRollback($destination)
 {
     foreach (ip as $target => $ip) {
         if (endsWith($target, $destination)) {
