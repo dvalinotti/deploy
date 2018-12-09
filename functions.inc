@@ -53,7 +53,7 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     $ssh->write("tar cvzf ". $version . ".tar.gz git/" . $target . "/\n");
     echo $ssh->read($read);
-    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/' . $layer . '/"' . "\n");
+    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/' . $target . '/"' . "\n");
     echo $ssh->read($read);
     $ssh->write("rm -rf " . $version . ".tar.gz\n");
     $result = $ssh->read();
