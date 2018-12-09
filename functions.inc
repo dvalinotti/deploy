@@ -59,7 +59,7 @@ function bundle($layer, $target, $version)
     $result = $ssh->read();
     echo $result . "\n";
     unset($ssh);
-    return "" . $result . "";
+    return "Success";
 }
 
 function push($source, $version, $destination) {

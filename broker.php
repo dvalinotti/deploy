@@ -27,7 +27,7 @@ function doBundle($source, $version)
         }
     }
 
-    return $result;
+    return 'Success';
 }
 
 function doPush($source, $destination, $version)
