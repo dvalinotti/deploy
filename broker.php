@@ -27,7 +27,6 @@ function doPush($destination, $version)
 {
     var_dump(ip);
     foreach (ip as $target => $ip) {
-	echo $target;
         if (endsWith($target, $destination)) {
             $targ_key = strtok($target, '-');
             echo "Pushing ver" . $version . " to " . $targ_key . '-' . $destination . "...\n";

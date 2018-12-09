@@ -7,6 +7,8 @@ include('Net/SFTP.php');
 include('Net/SFTP/Stream.php');
 require_once('rabbitMQLib.inc');
 
+define('NET_SSH2_LOGGING', NET_SSH2_LOG_COMPLEX);
+
 const ip = [
     'frontend-qa'   => '10.0.142.134',
     'api-qa'        => '10.0.136.105',
@@ -90,12 +92,13 @@ function push($host, $layer, $version)
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-    $scp = new Net_SCP($sftp);
-    if (!$scp->put('bundles/' . $bundle,
-                   'deploy/bundles/' . $host . '/' . $bundle,
+    $scp = new Net_SCP($ssh);
+    if (!$scp->put('/home/ubuntu/bundles/' . $bundle,
+                   '/home/ubuntu/deploy/bundles/' . $host . '/' . $bundle,
                    NET_SCP_LOCAL_FILE))
     {
-        throw new Exception("Failed to send file");
+	    echo ("Failed to send file\n");
+	    echo $ssh->getLog();
     }
     
     $ssh->setTimeout(6);
