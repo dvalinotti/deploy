@@ -44,6 +44,7 @@ function log_api_data($rid, $rUser, $accountCreationDate, $verified)
 
 function bundle($layer, $target, $version)
 {
+    //Initialize SSH connection to target@layer
     $host = $target . '-' . $layer;
     $ssh = new Net_SSH2(ip[$host]);
     $key = new Crypt_RSA();
@@ -53,14 +54,16 @@ function bundle($layer, $target, $version)
         exit('Login Failed');
     }
     
+    //SSH commands
     $ssh->setTimeout(6);
     $read = 'ubuntu@ip-' . str_replace('.', '-', ip[$host]) . ':~$';
     echo $ssh->read($read);
-    $ssh->write("tar -cvzf ". $version . ".tar.gz git/" . $target . "/\n");
+    $ssh->write("tar -cvzf ". $version . ".tar.gz git/" . $target . "/\n");     //Compress current directory to ver.tar.gz
     echo $ssh->read($read);
-    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:~/deploy/bundles/' . $target . '' . "\n");
+    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:~/deploy/bundles/' . $target . '' . "\n");   //SCP ver.tar.gz to deploy server
     echo $ssh->read($read);
-    $ssh->write("rm -rf " . $version . ".tar.gz\n");
+    
+    //Close SSH connection
     unset($ssh);
     return "Success";
 }
@@ -70,13 +73,8 @@ function push($host, $layer, $version)
     $bundle = $version . '.tar.gz';
     $key_file = $host . '-' . $layer;
     $read = 'ubuntu@ip-' . str_replace('.', '-', ip[$key_file]) . ':~$';
-
-    //if (! file_exists("/bundles/" . $bundle)) {
-    //    return 'ERROR: Bundle "' . $bundle . '" does not exist.';
-    //}
-
-    //echo exec('scp -i keys/' . $key_file . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key_file] . ':');
     
+    //Initialize SSH connection to target@layer
     $ssh = new Net_SSH2(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
@@ -85,6 +83,7 @@ function push($host, $layer, $version)
         exit('Login Failed');
     }
     
+    //Initialize SFTP/SCP connection to target@layer
     $sftp = new Net_SFTP(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
@@ -92,23 +91,53 @@ function push($host, $layer, $version)
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
+
+    //Attempt to SCP bundle.tar.gz to target@layer
     $scp = new Net_SCP($ssh);
-    if (!$scp->put('/home/ubuntu/bundles/' . $bundle,
+    if (!$scp->put(
+        '/home/ubuntu/bundles/' . $bundle,
                    '/home/ubuntu/deploy/bundles/' . $host . '/' . $bundle,
-                   NET_SCP_LOCAL_FILE))
-    {
-	    echo ("Failed to send file\n");
-	    echo $ssh->getLog();
+                   NET_SCP_LOCAL_FILE
+    )) {
+        throw new Exception('Failed to transfer file.');
     }
     
+    //SSH Commands
     $ssh->setTimeout(6);
     echo $ssh->read($read);
-    $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
+    $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");    //Compress locally installed version to *_old.tar.gz backup
     echo $ssh->read($read);
-    $ssh-> write('tar -C git/' . $host . ' -xzvf bundles/' . $bundle . "\n");
+    $ssh-> write('tar -C git/' . $host . ' -xzvf bundles/' . $bundle . "\n");   //Extract new version
     echo $ssh->read($read);
+
+    //Close SSH connection
     unset($ssh);
     echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
+    return "Success";
+}
+
+function rollback($host, $layer, $version) 
+{
+    $bundle = $host . '_old.tar.gz';
+    $key_file = $host . '-' . $layer;
+    $read = 'ubuntu@ip-' . str_replace('.', '-', ip[$key_file]) . ':~$';
+    
+    //Initialize SSH connection to target@layer
+    $ssh = new Net_SSH2(ip[$key_file]);
+    $key = new Crypt_RSA();
+    $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
+    echo "attempting connection\n";
+    if (!$ssh->login('ubuntu', $key)) {
+        exit('Login Failed');
+    }
+
+    $ssh->setTimeout(6);
+    echo $ssh->read($read);
+    $ssh-> write('tar -C git/' . $host . ' -xzvf ' . $bundle . "\n");
+    echo $ssh->read($read);
+
+    unset($ssh);
+    echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
 }
 
