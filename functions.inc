@@ -74,6 +74,12 @@ function push($host, $layer, $version)
     //echo exec('scp -i keys/' . $key_file . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key_file] . ':');
     
     $ssh = new Net_SSH2(ip[$key_file]);
+    $key = new Crypt_RSA();
+    $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
+    echo 'attempting connection';
+    if (!$ssh->login('ubuntu', $key)) {
+        exit('Login Failed');
+    }
 
     $scp = new NET_SCP($ssh);
     if (!$scp->put('/bundles/' . $bundle,
@@ -83,13 +89,6 @@ function push($host, $layer, $version)
         throw new Exception("Failed to send file");
     }
     
-    $key = new Crypt_RSA();
-    $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
-    echo 'attempting connection';
-    if (!$ssh->login('ubuntu', $key)) {
-        exit('Login Failed');
-    }
-
     $ssh->setTimeout(6);
     echo $ssh->read($read);
     $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
