@@ -2,6 +2,7 @@
 <?php
 include('Net/SSH2.php');
 include('Crypt/RSA.php');
+include('Net/SCP.php');
 require_once('rabbitMQLib.inc');
 
 const ip = [
@@ -70,14 +71,18 @@ function push($host, $layer, $version)
     //    return 'ERROR: Bundle "' . $bundle . '" does not exist.';
     //}
 
-    $connection = ssh2_connect(ip[$key_file], 22);
-    ssh2_auth_pubkey_file($connection, 'ubuntu', 'keys/' . $key_file . '.pem');
-
-    ssh2_scp_send($connection, '/bundles/' . $host . '/' . $bundle, '/', 0644);
-
-    echo exec('scp -i keys/' . $key_file . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key_file] . ':');
-
+    //echo exec('scp -i keys/' . $key_file . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key_file] . ':');
+    
     $ssh = new Net_SSH2(ip[$key_file]);
+
+    $scp = new NET_SCP($ssh);
+    if (!$scp->put('/bundles/' . $bundle,
+                   '/bundles/' . $host . '/' . $bundle,
+                   NET_SCP_LOCAL_FILE))
+    {
+        throw new Exception("Failed to send file");
+    }
+    
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
     echo 'attempting connection';
