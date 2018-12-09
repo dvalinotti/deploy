@@ -49,18 +49,17 @@ function bundle($layer, $target, $version)
     }
     
     $ssh->setTimeout(6);
-    $ansi = new File_ANSI();
     $read = 'ubuntu@ip-' . str_replace('.','-', ip[$host]) . ':~$';
-    $ansi->appendString($ssh->read($read));
+    echo $ssh->read($read);
     $ssh->write("tar cvzf ". $version . ".tar.gz git/" . $target . "/\n");
-    $ansi->appendString($ssh->read($read));
+    echo $ssh->read($read);
     $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/' . $target . '/"' . "\n");
-    $ansi->appendString($ssh->read($read));
+    echo $ssh->read($read);
     $ssh->write("rm -rf " . $version . ".tar.gz\n");
-    $result = $ansi->getscreen();
-    //echo $result . "\n";
-    $ssh->disconnect();
-    return $result;
+    $result = $ssh->read();
+    echo $result . "\n";
+    unset($ssh);
+    return "" . $result . "";
 }
 
 function push($source, $version, $destination) {
@@ -79,7 +78,7 @@ function push($source, $version, $destination) {
         exit('Login Failed');
     }
     $ssh->setTimeout(6);
-    $ansi->appendString($ssh->read($read));
+    echo $ssh->read($read);
     $ssh-> write();
 }
 
