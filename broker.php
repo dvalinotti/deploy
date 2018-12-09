@@ -28,7 +28,7 @@ function doPush($destination, $version)
     foreach (ip as $target => $ip) {
         if (endsWith($target, $destination)) {
             echo "Pushing ver" . $version . " to " . $target . '-' . $destination . "...\n";
-            $b = push();
+            $b = push($target, $destination, $version);
             $fn = $version . 'tar.gz';
 
             echo $b . "\n";
@@ -55,7 +55,7 @@ function requestProcessor($request)
         case "bundle":
             return doBundle($request['source'], $request['version']);
         case "push":
-            return doPush($request['source'], $request['destination'], $request['version']);
+            return doPush($request['destination'], $request['version']);
         case "rollback":
             return doRollback($request['source'], $request['destination'], $request['version']);
     }
