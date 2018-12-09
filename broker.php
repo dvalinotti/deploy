@@ -59,7 +59,7 @@ function requestProcessor($request)
         case "push":
             return doPush($request['destination'], $request['version']);
         case "rollback":
-            return doRollback($request['source'], $request['destination'], $request['version']);
+            return doRollback($request['layer']);
     }
     //log_message($request);
     return array(
