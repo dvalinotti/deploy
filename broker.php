@@ -27,8 +27,7 @@ function doPush($destination, $version)
 {
     foreach (ip as $target => $ip) {
         if (endsWith($target, $destination)) {
-            $tg_array = substr('-', $target);
-            $target = $tg_array[0];
+            $target = strtok($target, '-');
             echo "Pushing ver" . $version . " to " . $target . '-' . $destination . "...\n";
             $b = push($target, $destination, $version);
             $fn = $version . 'tar.gz';

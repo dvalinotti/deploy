@@ -62,18 +62,18 @@ function bundle($layer, $target, $version)
 
 function push($host, $layer, $version) {
     $bundle = $version . '.tar.gz';
-    $key = $host . '-' . $layer;
-    $read = 'ubuntu@ip-' . str_replace('.','-', ip[$key]) . ':~$';
+    $key_file = $host . '-' . $layer;
+    $read = 'ubuntu@ip-' . str_replace('.','-', ip[$key_file]) . ':~$';
 
-    if (! file_exists("/bundles/" . $bundle)) {
-        return 'ERROR: Bundle "' . $bundle . '" does not exist.';
-    }
+    //if (! file_exists("/bundles/" . $bundle)) {
+    //    return 'ERROR: Bundle "' . $bundle . '" does not exist.';
+    //}
 
-    echo exec('scp -i ' . $key . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key] . ':');
+    echo exec('scp -i keys/' . $key_file . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key_file] . ':');
 
-    $ssh = new Net_SSH2(ip[$host]);
+    $ssh = new Net_SSH2(ip[$key_file]);
     $key = new Crypt_RSA();
-    $key->loadKey(file_get_contents('keys/'.$host . '.pem'));
+    $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
     echo 'attempting connection';
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
@@ -83,7 +83,7 @@ function push($host, $layer, $version) {
     echo $ssh->read($read);
     $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
     echo $ssh->read($read);    
-    $ssh-> write('tar -C /' . $host . '-xzvf ' . $bundle . "\n");
+    $ssh-> write('tar -C /' . $host . ' -xzvf ' . $bundle . "\n");
     echo $ssh->read($read);
     unset($ssh);
     return "Success";
