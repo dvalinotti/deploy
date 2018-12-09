@@ -116,7 +116,7 @@ function push($host, $layer, $version)
     return "Success";
 }
 
-function rollback($host, $layer, $version) 
+function rollback($layer, $host) 
 {
     $bundle = $host . '_old.tar.gz';
     $key_file = $host . '-' . $layer;

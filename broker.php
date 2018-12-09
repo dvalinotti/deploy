@@ -14,34 +14,40 @@ function doBundle($source, $version)
         if (endsWith($target, $source)) {
             echo "BUNDLING:" .  $target . "\n";
             $b = bundle($source, str_replace('-' . $source, '', $target), $version);
-            $fn = $version . 'tar.gz';
 
             echo $b . "\n";
         }
     }
 
-    return 'Success';
+    return 'BUNDLE COMPLETE';
 }
 
 function doPush($destination, $version)
 {
-    var_dump(ip);
     foreach (ip as $target => $ip) {
         if (endsWith($target, $destination)) {
-            $targ_key = strtok($target, '-');
-            echo "Pushing ver" . $version . " to " . $targ_key . '-' . $destination . "...\n";
-            $b = push($targ_key, $destination, $version);
-            $fn = $version . 'tar.gz';
+            $layer = strtok($target, '-');
+            echo "Pushing ver" . $version . " to " . $layer . '-' . $destination . "...\n";
+            $b = push($layer, $destination, $version);
 
             echo $b . "\n";
         }
     }
-    return "Complete";
+    return "PUSH COMPLETE";
 }
 
 function doRollback($source, $destination, $version)
 {
-    return "rollback";
+    foreach (ip as $target => $ip) {
+        if (endsWith($target, $destination)) {
+            $layer = strtok($target, '-');
+            echo "Rolling back " . $target . " to previous version...\n";
+            $b = rollback($layer, $destination);
+
+            echo $b . "\n";
+        }
+    }
+    return "ROLLBACK COMPLETE";
 }
 
 function requestProcessor($request)
