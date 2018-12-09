@@ -4,6 +4,7 @@ include('Net/SSH2.php');
 include('Crypt/RSA.php');
 include('Net/SCP.php');
 include('Net/SFTP.php');
+include('Net/SFTP/Stream.php');
 require_once('rabbitMQLib.inc');
 
 const ip = [
