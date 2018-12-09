@@ -56,7 +56,7 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     $ssh->write("tar -cvzf ". $version . ".tar.gz git/" . $target . "/\n");
     echo $ssh->read($read);
-    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/deploy/bundles/' . $target . '/"' . "\n");
+    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:~/deploy/bundles/' . $target . '' . "\n");
     echo $ssh->read($read);
     $ssh->write("rm -rf " . $version . ".tar.gz\n");
     unset($ssh);
@@ -90,10 +90,10 @@ function push($host, $layer, $version)
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-    $scp = new NET_SCP($sftp);
+    $scp = new Net_SCP($sftp);
     if (!$scp->put('/bundles/' . $bundle,
                    '/deploy/bundles/' . $host . '/' . $bundle,
-                   NET_SCP_LOCAL_FILE))
+                   NET_SFTP_LOCAL_FILE))
     {
         throw new Exception("Failed to send file");
     }
