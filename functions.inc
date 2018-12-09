@@ -9,7 +9,6 @@ const ip = [
     'api-qa'        => '10.0.136.105',
     'db-qa'         => '10.0.20.102',
     'frontend-live' => '10.0.142.19',
-    'backend-live'  => '10.0.129.227',
     'api-live'      => '10.0.187.245',
     'db-live'       => '10.0.214.181'
 ];
@@ -54,7 +53,7 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     $ssh->write("tar cvzf ". $version . ".tar.gz git/" . $target . "/\n");
     echo $ssh->read($read);
-    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/"' . "\n");
+    $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/' . $layer . '/"' . "\n");
     echo $ssh->read($read);
     $ssh->write("rm -rf " . $version . ".tar.gz\n");
     $result = $ssh->read();
@@ -63,8 +62,24 @@ function bundle($layer, $target, $version)
     return "" . $result . "";
 }
 
-function push($source, $destination, $version) {
+function push($source, $version, $destination) {
+    $bundle = $version . '.tar.gz';
+    $read = 'ubuntu@ip-' . str_replace('.','-', ip[$host]) . ':~$';
 
+    if (! file_exists("/bundles/" . $bundle)) {
+        return 'ERROR: Bundle "' . $bundle . '" does not exist.';
+    }
+
+    $ssh = new Net_SSH2(ip[$host]);
+    $key = new Crypt_RSA();
+    $key->loadKey(file_get_contents('keys/'.$host . '.pem'));
+    echo 'attempting connection';
+    if (!$ssh->login('ubuntu', $key)) {
+        exit('Login Failed');
+    }
+    $ssh->setTimeout(6);
+    echo $ssh->read($read);
+    $ssh-> write();
 }
 
 function startsWith($haystack, $needle)
