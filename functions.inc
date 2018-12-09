@@ -78,22 +78,22 @@ function push($host, $layer, $version)
     $ssh = new Net_SSH2(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
-    echo 'attempting connection';
+    echo "attempting connection\n";
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
     }
     
-    $sftp = new SFTP(ip[$key_file]);
+    $sftp = new Net_SFTP(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
-    echo 'attempting connection';
+    echo "attempting connection\n";
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-    $scp = new NET_SCP($sftp);
-    if (!$scp->put('/home/ubuntu/bundles/' . $bundle,
+    //$scp = new NET_SCP($sftp);
+    if (!$sftp->put('/home/ubuntu/bundles/' . $bundle,
                    '/home/ubuntu/deploy/bundles/' . $host . '/' . $bundle,
-                   NET_SCP_LOCAL_FILE))
+                   NET_SFTP_LOCAL_FILE))
     {
         throw new Exception("Failed to send file");
     }
@@ -102,9 +102,10 @@ function push($host, $layer, $version)
     echo $ssh->read($read);
     $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
     echo $ssh->read($read);
-    $ssh-> write('tar -C git/' . $host . ' -xzvf ' . $bundle . "\n");
+    $ssh-> write('tar -C git/' . $host . ' -xzvf bundles/' . $bundle . "\n");
     echo $ssh->read($read);
     unset($ssh);
+    echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
 }
 
