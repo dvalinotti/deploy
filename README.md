@@ -1,2 +1,7 @@
-# deploy
-deployment RabbitMQ server for it490 final project
+# RabbitMQ Deployment Server
+This is the git repository of the Deploy server for my group's IT490 final project. This server is responsible for the following functions involving software deployment:
+1. Bundling
+2. Pushing
+3. Rollback
+
+This project is built on RabbitMQ, using PHP and phpseclib to provide functionality.
