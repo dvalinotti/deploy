@@ -11,28 +11,30 @@ function doBundle($source, $version)
 {
     $result = false;
     foreach (ip as $target => $ip) {
-	if (endsWith($target, $source)) {
-	    echo "BUNDLING:" .  $target . "\n";
-            $b = bundle($source, str_replace('-' . $source , '' , $target), $version);
+        if (endsWith($target, $source)) {
+            echo "BUNDLING:" .  $target . "\n";
+            $b = bundle($source, str_replace('-' . $source, '', $target), $version);
             $fn = $version . 'tar.gz';
 
-	    echo $b . "\n";
-            //if (strpos($b, 'rm -rf ' . $fn) !== false) {
-            //    echo 'Bundle on' . $target . '@' . $source . ': SUCCESS' ;
-            //   $result = true;
-            //} else {
-            //    echo 'Bundle on' . $target . '@' . $source . ': FAILURE';
-            //    $result = false;
-            //}
+            echo $b . "\n";
         }
     }
 
     return 'Success';
 }
 
-function doPush($source, $destination, $version)
+function doPush($destination, $version)
 {
-    return "push";
+    foreach (ip as $target => $ip) {
+        if (endsWith($target, $destination)) {
+            echo "Pushing ver" . $version . " to " . $target . '-' . $destination . "...\n";
+            $b = push();
+            $fn = $version . 'tar.gz';
+
+            echo $b . "\n";
+        }
+    }
+    return "Complete";
 }
 
 function doRollback($source, $destination, $version)

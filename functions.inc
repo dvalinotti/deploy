@@ -51,24 +51,25 @@ function bundle($layer, $target, $version)
     $ssh->setTimeout(6);
     $read = 'ubuntu@ip-' . str_replace('.','-', ip[$host]) . ':~$';
     echo $ssh->read($read);
-    $ssh->write("tar cvzf ". $version . ".tar.gz git/" . $target . "/\n");
+    $ssh->write("tar -cvzf ". $version . ".tar.gz git/" . $target . "/\n");
     echo $ssh->read($read);
     $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:"/home/ubuntu/deploy/bundles/' . $target . '/"' . "\n");
     echo $ssh->read($read);
     $ssh->write("rm -rf " . $version . ".tar.gz\n");
-    $result = $ssh->read();
-    echo $result . "\n";
     unset($ssh);
     return "Success";
 }
 
-function push($source, $version, $destination) {
+function push($host, $layer, $version) {
     $bundle = $version . '.tar.gz';
-    $read = 'ubuntu@ip-' . str_replace('.','-', ip[$host]) . ':~$';
+    $key = $host . '-' . $layer;
+    $read = 'ubuntu@ip-' . str_replace('.','-', ip[$key]) . ':~$';
 
     if (! file_exists("/bundles/" . $bundle)) {
         return 'ERROR: Bundle "' . $bundle . '" does not exist.';
     }
+
+    echo exec('scp -i ' . $key . '.pem bundles/'. $bundle . ' ubuntu@' . ip[$key] . ':');
 
     $ssh = new Net_SSH2(ip[$host]);
     $key = new Crypt_RSA();
@@ -77,9 +78,15 @@ function push($source, $version, $destination) {
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
     }
+
     $ssh->setTimeout(6);
     echo $ssh->read($read);
-    $ssh-> write();
+    $ssh-> write('tar -cvzf ' . $host . '_old.tar.gz git/' . $host . "/\n");
+    echo $ssh->read($read);    
+    $ssh-> write('tar -C /' . $host . '-xzvf ' . $bundle . "\n");
+    echo $ssh->read($read);
+    unset($ssh);
+    return "Success";
 }
 
 function startsWith($haystack, $needle)
