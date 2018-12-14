@@ -64,7 +64,6 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     
     //Close SSH connection
-    $ssh->disconnect();
     unset($ssh);
     return "Success";
 }

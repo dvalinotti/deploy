@@ -19,9 +19,8 @@ function doBundle($source, $version)
             echo $b . "\n";
         }
     }
-    $output = json_encode('success');
-    echo 'End';
-    return $output;
+
+    return 'BUNDLE COMPLETE';
 }
 
 function doPush($destination, $version)
