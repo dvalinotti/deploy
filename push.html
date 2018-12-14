@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>RMQ Deployment</title>
+    </head>
+
+    <body>
+        <h1>RMQ Deploy MGMT</h1>
+        <h2>Push</h2>
+        <br>
+        Select source layer:
+        <select name="source" id="source" form="bundleform">
+            <option value="live">Live</option>
+            <option value="qa">QA</option>
+            <option value="dev">Development</option>
+        </select>
+        <br>
+        <br>
+        <form action="clientBundle.php" id="bundleform">
+            Version:<input type="text" name="version">
+            <input type="submit">
+        </form>
+        <div id="output">
+            
+        </div>
+    </body>
+</html>
