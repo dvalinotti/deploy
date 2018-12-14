@@ -4,7 +4,28 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
+<<<<<<< HEAD
 function doLogin($username,$password)
+=======
+
+function doBundle($source, $version)
+{
+    $result = false;
+    foreach (ip as $target => $ip) {
+        if (endsWith($target, $source)) {
+            echo "BUNDLING:" .  $target . "\n";
+            $b = bundle($source, str_replace('-' . $source, '', $target), $version);
+
+            echo $b . "\n";
+        }
+    }
+    $output = json_encode('success');
+    echo 'End';
+    return $output;
+}
+
+function doPush($destination, $version)
+>>>>>>> cbe6e34dc6260f4c27774771c190c815ed88ee85
 {
     // lookup username in databas
     // check password
