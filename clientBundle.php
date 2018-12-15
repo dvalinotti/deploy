@@ -15,23 +15,11 @@ else
 }
 
 $request = array();
-$request['type'] = "bundle";
-$request['source'] = "qa";
-$request['version'] = "1.0";
+$request['type'] = $_POST['type'];
+$request['source'] = $_POST['source'];
+$request['version'] = $_POST['version'];
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
-
-if (! $response) {
-  echo "BUNDLE SUCCEEDED";
-}
-else {
-  echo "BUNDLE FAILED";
-}
-
-echo $argv[0]." END".PHP_EOL;
-
+echo $response;

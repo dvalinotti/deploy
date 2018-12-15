@@ -16,16 +16,11 @@ else
 
 
 $request = array();
-$request['type'] = "rollback";
-$request['layer'] = "qa";
+$request['type'] = $_POST['type'];
+$request['layer'] = $_POST['layer'];
 $request['message'] = $msg;
 var_dump($request);
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
-
-echo $argv[0]." END".PHP_EOL;
-
+echo $response;

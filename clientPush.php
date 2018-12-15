@@ -15,16 +15,11 @@ else
 }
 
 $request = array();
-$request['type'] = "push";
-$request['destination'] = "qa";
-$request['version'] = "1.0";
+$request['type'] = $_POST['type'];
+$request['destination'] = $_POST['destination'];
+$request['version'] = $_POST['version'];
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
-
-echo $argv[0]." END".PHP_EOL;
-
+echo $response;
