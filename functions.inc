@@ -74,7 +74,7 @@ function push($host, $layer, $version)
     $ssh = new Net_SSH2(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
-    echo "attempting connection\n";
+    echo "attempting SSH connection to " . $key_file . "\n";
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
     }
@@ -83,7 +83,7 @@ function push($host, $layer, $version)
     $sftp = new Net_SFTP(ip[$key_file]);
     $key = new Crypt_RSA();
     $key->loadKey(file_get_contents('keys/'.$key_file . '.pem'));
-    echo "attempting connection\n";
+    echo "attempting SFTP/SCP connection to " . $key_file . "\n";
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
@@ -107,7 +107,7 @@ function push($host, $layer, $version)
     //Close SSH connection
     $ssh->disconnect();
     unset($ssh);
-    echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
+    //echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return true;
 }
 function rollback($layer, $host)
@@ -128,9 +128,9 @@ function rollback($layer, $host)
     echo $ssh->read($read);
     $ssh-> write('tar -C git/' . $layer . ' -xzvf ' . $bundle . "\n");
     echo $ssh->read($read);
-    unset($ssh);
-    echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
+    //echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
     $ssh->disconnect(); 
+    unset($ssh);
     return true;
 }
 function startsWith($haystack, $needle)
