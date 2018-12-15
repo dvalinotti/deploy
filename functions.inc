@@ -6,9 +6,7 @@ include('Net/SCP.php');
 include('Net/SFTP.php');
 include('Net/SFTP/Stream.php');
 require_once('rabbitMQLib.inc');
-
 define('NET_SSH2_LOGGING', NET_SSH2_LOG_COMPLEX);
-
 const ip = [
     'frontend-qa'   => '10.0.142.134',
     'api-qa'        => '10.0.136.105',
@@ -17,11 +15,9 @@ const ip = [
     'api-live'      => '10.0.187.245',
     'db-live'       => '10.0.214.181'
 ];
-
 function log_api_data($rid, $rUser, $accountCreationDate, $verified)
 {
     $db = mysqli_connect('localhost', 'emile', 'Password7!', 'authtest');
-
     $rUser = mysqli_real_escape_string($db, $rUser);
     $s = "SELECT * FROM reddit_data WHERE redditorID ='". $rid ."';";
     echo $s;
@@ -35,13 +31,11 @@ function log_api_data($rid, $rUser, $accountCreationDate, $verified)
     } else {
         $s = "INSERT INTO reddit_data VALUES('".$rid."', '".$rUser."', CAST('". $accountCreationDate ."' AS DATE), '".$verified."');";
         $t = (mysqli_query($db, $s));
-
         echo $result;
     }
     //echo $result;
     return $result;
 }
-
 function bundle($layer, $target, $version)
 {
     //Initialize SSH connection to target@layer
@@ -64,11 +58,9 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     
     //Close SSH connection
-    $ssh->disconnect();
     unset($ssh);
     return "Success";
 }
-
 function push($host, $layer, $version)
 {
     $bundle = $version . '.tar.gz';
@@ -92,7 +84,6 @@ function push($host, $layer, $version)
     if (!$sftp->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-
     //Attempt to SCP bundle.tar.gz to target@layer
     $scp = new Net_SCP($ssh);
     if (!$scp->put(
@@ -110,13 +101,11 @@ function push($host, $layer, $version)
     echo $ssh->read($read);
     $ssh-> write('tar -C git/' . $host . ' -xzvf bundles/' . $bundle . "\n");   //Extract new version
     echo $ssh->read($read);
-
     //Close SSH connection
     unset($ssh);
     echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
 }
-
 function rollback($layer, $host) 
 {
     $bundle = $layer . '_old.tar.gz';
@@ -131,30 +120,25 @@ function rollback($layer, $host)
     if (!$ssh->login('ubuntu', $key)) {
         exit('Login Failed');
     }
-
     $ssh->setTimeout(6);
     echo $ssh->read($read);
     $ssh-> write('tar -C git/' . $layer . ' -xzvf ' . $bundle . "\n");
     echo $ssh->read($read);
-
     unset($ssh);
     echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
 }
-
 function startsWith($haystack, $needle)
 {
     $length = strlen($needle);
     return (substr($haystack, 0, $length) === $needle);
 }
-
 function endsWith($haystack, $needle)
 {
     $length = strlen($needle);
     if ($length == 0) {
         return true;
     }
-
     return (substr($haystack, -$length) === $needle);
 }
 ?>
