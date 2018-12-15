@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 require_once('path.inc');
 require_once('get_host_info.inc');
@@ -23,3 +22,4 @@ $response = $client->send_request($request);
 //$response = $client->publish($request);
 
 echo $response;
+?>

@@ -2,32 +2,42 @@
 
 <head>
     <title>RMQ Deployment</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type = "text/javascript">
         function bundle() {
             //debugger;
+            $('.loader').show();
             var xhr = new XMLHttpRequest();
             var url = "clientBundle.php";
             var source = document.getElementById("source").value;
             var version = document.getElementById("version").value;
+            var type = 'bundle'
 
-            var data = "source=" + source + "&version=" + version;
+            var data = "source=" + source + "&version=" + version + "&type=" + type;
             xhr.open("POST", url, true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    response = this.responseText;
-                    endresult = JSON.parse(response);
-                    document.getElementById("output").innerHTML = "Campaign started" + " on " + subredditname + " called " + title + " with post " + post + ".";
+                    $('.loader').hide();
+                    if (this.responseText.trim() == '1') {
+                        
+                        document.getElementById("output").innerHTML = "Bundle ver" + version + " on layer " + source + " completed successfully.";
+                    }
+                    else{
+                        document.getElementById("output").innerHTML = "Bundle ver" + version + " on layer " + source + " failed.";;
+                    }
+                    
                 }
             };
             xhr.send(data);
 
         }
     </script>
-    <h1>RMQ Deploy MGMT</h1>
+    <h1>RMQ Deploy MGMT</h1> 
     <h2>Bundle</h2>
     <br>
     Select source layer:
@@ -42,9 +52,9 @@
         Version:<input type="text" name="version" id="version">
         <button type="button" onclick="bundle();">Submit</button>
     </form>
-    <div id="output">
-
-    </div>
+    <div class="loader" style="display: none;">Loading...</div>
+    <div id="output"></div>
+    <div class="home"><a id="homelink" href="index.html">Home</a></div>
 </body>
 
 </html>
