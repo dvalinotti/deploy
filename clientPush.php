@@ -23,3 +23,4 @@ $response = $client->send_request($request);
 //$response = $client->publish($request);
 
 echo $response;
+?>
