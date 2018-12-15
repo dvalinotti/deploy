@@ -106,6 +106,7 @@ function push($host, $layer, $version)
     echo $ssh->read($read);
     //Close SSH connection
     $ssh->disconnect();
+    unset($scp);
     unset($ssh);
     //echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return true;

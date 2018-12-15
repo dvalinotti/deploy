@@ -25,9 +25,11 @@ function doPush($destination, $version)
             echo "Pushing ver" . $version . " to " . $layer . '-' . $destination . "...\n";
             $b = push($layer, $destination, $version) or die("Bundle failed.");
             //echo $b . "\n";
-        }
+	}
+	//echo $target;
     }
-    return true;
+    //echo "\nend loop";
+    return $b;
 }
 function doRollback($destination)
 {
@@ -39,6 +41,8 @@ function doRollback($destination)
             //echo $b . "\n";
         }
     }
+    echo "\n";
+    var_dump($b);
     return $b;
 }
 function requestProcessor($request)
