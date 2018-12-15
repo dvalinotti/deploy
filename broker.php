@@ -27,7 +27,7 @@ function doPush($destination, $version)
             //echo $b . "\n";
         }
     }
-    return $b;
+    return true;
 }
 function doRollback($destination)
 {
