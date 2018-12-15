@@ -59,8 +59,8 @@ function bundle($layer, $target, $version)
     echo $ssh->read($read);
     $ssh->write("scp -i deploy.pem " . $version . '.tar.gz ubuntu@10.0.239.193:~/deploy/bundles/' . $target . '' . "\n");   //SCP ver.tar.gz to deploy server
     echo $ssh->read($read);
-    
     //Close SSH connection
+    $ssh->disconnect();	   
     unset($ssh);
     return "Success";
 }
@@ -105,6 +105,7 @@ function push($host, $layer, $version)
     $ssh-> write('tar -C git/' . $host . ' -xzvf bundles/' . $bundle . "\n");   //Extract new version
     echo $ssh->read($read);
     //Close SSH connection
+    $ssh->disconnect();
     unset($ssh);
     echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
@@ -129,6 +130,7 @@ function rollback($layer, $host)
     echo $ssh->read($read);
     unset($ssh);
     echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
+    $ssh->disconnect(); 
     return "Success";
 }
 function startsWith($haystack, $needle)
