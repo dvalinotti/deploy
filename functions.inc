@@ -13,7 +13,10 @@ const ip = [
     'db-qa'         => '10.0.20.102',
     'frontend-live' => '10.0.142.19',
     'api-live'      => '10.0.187.245',
-    'db-live'       => '10.0.214.181'
+    'db-live'       => '10.0.214.181',
+    'db-dev'        => '192.168.1.124',
+    'frontend-dev'  => '192.168.1.140',
+    'api-dev'       => '192.168.1.199'
 ];
 function log_api_data($rid, $rUser, $accountCreationDate, $verified)
 {
@@ -106,7 +109,7 @@ function push($host, $layer, $version)
     echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
     return "Success";
 }
-function rollback($layer, $host) 
+function rollback($layer, $host)
 {
     $bundle = $layer . '_old.tar.gz';
     $key_file = $layer . '-' . $host;
