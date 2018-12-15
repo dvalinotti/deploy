@@ -10,10 +10,10 @@ define('NET_SSH2_LOGGING', NET_SSH2_LOG_COMPLEX);
 const ip = [
     'frontend-qa'   => '10.0.142.134',
     'api-qa'        => '10.0.136.105',
-    'db-qa'         => '10.0.20.102',
+    'db-qa'         => '10.0.29.54',
     'frontend-live' => '10.0.142.19',
     'api-live'      => '10.0.187.245',
-    'db-live'       => '10.0.214.181',
+    'db-live'       => '10.0.222.57',
     'db-dev'        => '192.168.1.124',
     'frontend-dev'  => '192.168.1.140',
     'api-dev'       => '192.168.1.199'
