@@ -62,7 +62,7 @@ function bundle($layer, $target, $version)
     //Close SSH connection
     $ssh->disconnect();	   
     unset($ssh);
-    return "Success";
+    return true;
 }
 function push($host, $layer, $version)
 {
@@ -108,7 +108,7 @@ function push($host, $layer, $version)
     $ssh->disconnect();
     unset($ssh);
     echo "\nPush " . $bundle . " to " . $key_file . " complete. \n";
-    return "Success";
+    return true;
 }
 function rollback($layer, $host)
 {
@@ -131,7 +131,7 @@ function rollback($layer, $host)
     unset($ssh);
     echo "\nRollback " . $bundle . " to " . $key_file . " complete. \n";
     $ssh->disconnect(); 
-    return "Success";
+    return true;
 }
 function startsWith($haystack, $needle)
 {

@@ -11,11 +11,11 @@ function doBundle($source, $version)
     foreach (ip as $target => $ip) {
         if (endsWith($target, $source)) {
             echo "BUNDLING:" .  $target . "\n";
-            $b = bundle($source, str_replace('-' . $source, '', $target), $version);
-            echo $b . "\n";
+            $b = bundle($source, str_replace('-' . $source, '', $target), $version) or die("Bundle failed.");
+            //echo $b . "\n";
         }
     }
-    return 'BUNDLE COMPLETE';
+    return $b;
 }
 function doPush($destination, $version)
 {
@@ -23,11 +23,11 @@ function doPush($destination, $version)
         if (endsWith($target, $destination)) {
             $layer = strtok($target, '-');
             echo "Pushing ver" . $version . " to " . $layer . '-' . $destination . "...\n";
-            $b = push($layer, $destination, $version);
-            echo $b . "\n";
+            $b = push($layer, $destination, $version) or die("Bundle failed.");
+            //echo $b . "\n";
         }
     }
-    return "PUSH COMPLETE";
+    return $b;
 }
 function doRollback($destination)
 {
@@ -35,11 +35,11 @@ function doRollback($destination)
         if (endsWith($target, $destination)) {
             $layer = strtok($target, '-');
             echo "Rolling back " . $target . " to previous version...\n";
-            $b = rollback($layer, $destination);
-            echo $b . "\n";
+            $b = rollback($layer, $destination) or die("Bundle failed.");
+            //echo $b . "\n";
         }
     }
-    return "ROLLBACK COMPLETE";
+    return $b;
 }
 function requestProcessor($request)
 {

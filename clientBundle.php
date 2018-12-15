@@ -26,5 +26,12 @@ echo "client received response: ".PHP_EOL;
 print_r($response);
 echo "\n\n";
 
+if (! $response) {
+  echo "BUNDLE SUCCEEDED";
+}
+else {
+  echo "BUNDLE FAILED";
+}
+
 echo $argv[0]." END".PHP_EOL;
 
